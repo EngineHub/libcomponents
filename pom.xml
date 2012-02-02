@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zachsthings</groupId>
+  <artifactId>libcomponents</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>libcomponents</name>
+  <description>libcomponents provides a plexible system of components to allow modular subplugins</description>
+
+  <scm>
+    <connection>scm:git:git://github.com/zml2008/libcomponents.git</connection>
+    <url>https://github.com/zml2008/libcomponents</url>
+    <developerConnection>scm:git:git@github.com:zml2008/libcomponents.git</developerConnection>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>sk89q-mvn2</id>
+      <url>http://mvn2.sk89q.com/repo</url>
+    </repository>
+    <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <!-- Required component -->
+    <dependency>
+      <groupId>com.sk89q</groupId>
+      <artifactId>worldedit</artifactId>
+      <version>5.1</version>
+    </dependency>
+
+    <!-- Bukkit -->
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.1-R1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <!-- Plugins -->
+    <plugins>
+      <!-- Compile plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+
+      <!-- JAR creation plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>true</addMavenDescriptor>
+            <manifest>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- Assembly -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-2</version><!--$NO-MVN-MAN-VER$-->
+        <configuration>
+          <descriptor>${basedir}/src/main/assembly/default.xml</descriptor>
+        </configuration>
+      </plugin>
+
+      <!-- Release -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.1</version><!--$NO-MVN-MAN-VER$-->
+      </plugin>
+    </plugins>
+  </build>
+</project>
