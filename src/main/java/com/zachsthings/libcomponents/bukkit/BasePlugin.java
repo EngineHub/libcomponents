@@ -2,9 +2,12 @@ package com.zachsthings.libcomponents.bukkit;
 
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
+import com.zachsthings.libcomponents.ComponentInformation;
 import com.zachsthings.libcomponents.ComponentManager;
+import com.zachsthings.libcomponents.InvalidComponentException;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -36,7 +39,7 @@ public abstract class BasePlugin extends JavaPlugin {
     private boolean opPermissions;
 
     protected YAMLProcessor config;
-    protected ComponentManager<CommandSender> componentManager;
+    protected ComponentManager<BukkitComponent> componentManager;
 
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
@@ -53,23 +56,32 @@ public abstract class BasePlugin extends JavaPlugin {
         // Prepare permissions
         PermissionsResolverManager.initialize(this);
 
-        componentManager = new ComponentManager<CommandSender>(getLogger()) {
-            @Override
-            protected CommandsManager<CommandSender> createComponentManager() {
-                return new CommandsManager<CommandSender>() {
-                    @Override
-                    public boolean hasPermission(CommandSender sender, String permission) {
-                        return BasePlugin.this.hasPermission(sender, permission);
-                    }
-                };
-            }
-        };
+        componentManager = new ComponentManager<BukkitComponent>(getLogger(), BukkitComponent.class) {
+			@Override
+			protected void setUpComponent(BukkitComponent component) {
+				// Create a CommandsManager instance
+				CommandsManager<CommandSender> commands = new CommandsManager<CommandSender>() {
+					@Override
+					public boolean hasPermission(CommandSender sender, String permission) {
+						return BasePlugin.this.hasPermission(sender, permission);
+					}
+				};
+				commands.setInjector(new SimpleInjector(component));
+				component.setUp(BasePlugin.this, commands);
+			}
+		};
 
         registerComponentLoaders();
 
-        componentManager.loadComponents();
-        
-        config.save();
+		try {
+			componentManager.loadComponents();
+		} catch (InvalidComponentException e) {
+			getLogger().severe(e.getMessage());
+		}
+		
+		componentManager.enableComponents();
+
+		config.save();
     }
 
     public abstract void registerComponentLoaders();
@@ -96,7 +108,7 @@ public abstract class BasePlugin extends JavaPlugin {
         return config;
     }
 
-    public ComponentManager<?> getComponentManager() {
+    public ComponentManager<BukkitComponent> getComponentManager() {
         return componentManager;
     }
 

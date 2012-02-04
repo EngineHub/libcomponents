@@ -32,41 +32,43 @@ import java.util.logging.Logger;
  * A simple manager that keeps track of components and what they should do.
  * @author zml2008
  */
-public abstract class ComponentManager<Player> {
+public abstract class ComponentManager<T extends AbstractComponent> {
     protected final Logger logger;
-    protected final List<ComponentLoader<Player>> loaders = new ArrayList<ComponentLoader<Player>>();
-    protected final Map<String, AbstractComponent<Player>> registeredComponents = new LinkedHashMap<String, AbstractComponent<Player>>();
+	protected final Class<T> componentClass;
+    protected final List<ComponentLoader> loaders = new ArrayList<ComponentLoader>();
+    protected final Map<String, T> registeredComponents = new LinkedHashMap<String, T>();
     protected final Map<Class<? extends Annotation>, AnnotationHandler<?>> annotationHandlers = new LinkedHashMap<Class<? extends Annotation>, AnnotationHandler<?>>();
     
-    public ComponentManager(Logger logger) {
+    public ComponentManager(Logger logger, Class<T> componentCass) {
         this.logger = logger;
+		this.componentClass = componentCass;
     }
 
-    public synchronized boolean addComponentLoader(ComponentLoader<Player> loader) {
+    public synchronized boolean addComponentLoader(ComponentLoader loader) {
         return loaders.add(loader);
     }
 
-    public synchronized boolean loadComponents() {
-        for (ComponentLoader<Player> loader : loaders) {
-            for (AbstractComponent<Player> component : loader.loadComponents()) {
-                // Create a CommandsManager instance
-                CommandsManager<Player> commands = createComponentManager();
-                commands.setInjector(new SimpleInjector(component));
-                
-                ComponentInformation info = component.getClass().getAnnotation(ComponentInformation.class);
-
-                component.setUp(commands, loader, info);
-                
+	
+    public synchronized boolean loadComponents() throws InvalidComponentException {
+        for (ComponentLoader loader : loaders) {
+            for (AbstractComponent baseComponent : loader.loadComponents()) {
+				if (!componentClass.isAssignableFrom(baseComponent.getClass())) {
+					throw new InvalidComponentException(baseComponent.getClass(), "Component is not an instance of " + componentClass.getCanonicalName());
+				}
+				T component = componentClass.cast(baseComponent);
+				ComponentInformation info = component.getClass().getAnnotation(ComponentInformation.class);
+                component.setUp(loader, info);
+				setUpComponent(component);
                 registeredComponents.put(info.friendlyName().replaceAll(" ", "-").toLowerCase(), component);
             }
         }
         return true;
     }
 
-    protected abstract CommandsManager<Player> createComponentManager();
+    protected abstract void setUpComponent(T component);
 
     public synchronized void enableComponents() {
-        for (AbstractComponent<Player> component : registeredComponents.values()) {
+        for (T component : registeredComponents.values()) {
             for (Field field : component.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 for (Annotation annotation : field.getAnnotations()) {
@@ -90,20 +92,20 @@ public abstract class ComponentManager<Player> {
     }
     
     public synchronized void unloadComponents() {
-        for (AbstractComponent<Player> component : registeredComponents.values()) {
+        for (T component : registeredComponents.values()) {
             component.disable();
         }
         registeredComponents.clear();
     }
     
     public synchronized void reloadComponents() {
-        for (AbstractComponent<Player> component : registeredComponents.values()) {
+        for (T component : registeredComponents.values()) {
             component.reload();
         }
     }
     
-    public synchronized <T> T getComponent(Class<T> type) {
-        for (AbstractComponent<Player> component : registeredComponents.values()) {
+    public synchronized <C> C getComponent(Class<C> type) {
+        for (T component : registeredComponents.values()) {
             if (component.getClass().equals(type)) {
                 return type.cast(component);
             }
@@ -111,11 +113,11 @@ public abstract class ComponentManager<Player> {
         return null;
     }
     
-    public Collection<AbstractComponent<Player>> getComponents() {
+    public Collection<T> getComponents() {
         return Collections.unmodifiableCollection(registeredComponents.values());
     }
     
-    public AbstractComponent<Player> getComponent(String friendlyName) {
+    public AbstractComponent getComponent(String friendlyName) {
         return registeredComponents.get(friendlyName);
     }
     

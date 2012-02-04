@@ -25,9 +25,9 @@ import java.util.Collection;
 /**
  * @author zml2008
  */
-public interface ComponentLoader<Player> {
+public interface ComponentLoader {
 
-    public Collection<AbstractComponent<Player>> loadComponents();
+    public Collection<AbstractComponent> loadComponents();
     
     public YAMLNode getConfiguration(AbstractComponent component);
     

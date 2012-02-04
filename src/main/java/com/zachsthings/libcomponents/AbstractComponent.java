@@ -30,12 +30,7 @@ import java.util.Map;
 /**
  * @author zml2008
  */
-public abstract class AbstractComponent<Player> {
-
-    /**
-     * The {@link CommandsManager} where all commands are registered for this component.
-     */
-    protected CommandsManager<Player> commands;
+public abstract class AbstractComponent {
 
     /**
      * The raw configuration for this component. This is usually accessed through
@@ -49,8 +44,7 @@ public abstract class AbstractComponent<Player> {
 
     private boolean enabled;
 
-    public void setUp(CommandsManager<Player> commands, ComponentLoader loader, ComponentInformation info) {
-        this.commands = commands;
+    public void setUp(ComponentLoader loader, ComponentInformation info) {
         this.loader = loader;
         this.info = info;
     }
@@ -103,11 +97,5 @@ public abstract class AbstractComponent<Player> {
         }
     }
     
-    public Map<String, String> getCommands() {
-        if (commands == null) {
-            return Collections.emptyMap();
-        } else {
-            return commands.getCommands();
-        }
-    }
+    public abstract Map<String, String> getCommands();
 }

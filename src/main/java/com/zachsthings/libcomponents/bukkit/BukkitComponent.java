@@ -9,10 +9,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * A component written for a Bukkit server
  */
-public abstract class BukkitComponent extends AbstractComponent<CommandSender> implements CommandExecutor {
+public abstract class BukkitComponent extends AbstractComponent implements CommandExecutor {
 
     /**
      * The {@link com.sk89q.bukkit.util.CommandsManagerRegistration} used to handle dynamic
@@ -20,13 +23,18 @@ public abstract class BukkitComponent extends AbstractComponent<CommandSender> i
      */
     private CommandsManagerRegistration commandRegistration;
 
+	/**
+	 * The {@link CommandsManager} where all commands are registered for this component.
+	 */
+	protected CommandsManager<CommandSender> commands;
+
     /**
      * The BasePlugin is a base for all plugins that use this component system.
      */
     private BasePlugin plugin;
 
-    public void setUp(BasePlugin plugin, CommandsManager<CommandSender> commands, ComponentLoader loader, ComponentInformation info) {
-        super.setUp(commands, loader, info);
+    public void setUp(BasePlugin plugin, CommandsManager<CommandSender> commands) {
+		this.commands = commands;
         this.plugin = plugin;
         commandRegistration = new CommandsManagerRegistration(plugin, this, commands);
     }
@@ -77,4 +85,13 @@ public abstract class BukkitComponent extends AbstractComponent<CommandSender> i
         }
         return false;
     }
+
+	@Override
+	public Map<String, String> getCommands() {
+		if (commands == null) {
+			return Collections.emptyMap();
+		} else {
+			return commands.getCommands();
+		}
+	}
 }

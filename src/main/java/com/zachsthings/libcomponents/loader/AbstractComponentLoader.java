@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 /**
  * A parent class that contains several useful component loader helper methods
  */
-public abstract class AbstractComponentLoader<T, U extends AbstractComponent<T>> implements ComponentLoader<T> {
+public abstract class AbstractComponentLoader implements ComponentLoader {
     private final File configDir;
     private final Logger logger;
     
