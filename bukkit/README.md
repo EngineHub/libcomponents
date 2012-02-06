@@ -1,0 +1,1 @@
+libcomponents-bukkit is the Bukkit implementation of libcomponents. It, unlike other portions of libcomponents, is released under the terms of the GPL version 3.

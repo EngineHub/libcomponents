@@ -1,33 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.zachsthings.libcomponents</groupId>
-  <artifactId>libcomponents</artifactId>
+  <artifactId>libcomponents-core</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>libcomponents</name>
-  <description>libcomponents provides a flexible system of components to allow modular subplugins</description>
-  <packaging>pom</packaging>
-
-    <modules>
-        <module>core</module>
-        <module>bukkit</module>
-    </modules>
+  <name>libcomponents core</name>
+  <description>The core, non-implementation-specific libcomponents</description>
 
   <scm>
     <connection>scm:git:git://github.com/zml2008/libcomponents.git</connection>
     <url>https://github.com/zml2008/libcomponents</url>
     <developerConnection>scm:git:git@github.com:zml2008/libcomponents.git</developerConnection>
   </scm>
-
-  <repositories>
-    <repository>
-      <id>sk89q-mvn2</id>
-      <url>http://mvn2.sk89q.com/repo</url>
-    </repository>
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>
