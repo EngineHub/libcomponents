@@ -3,11 +3,11 @@
     <parent>
         <groupId>com.zachsthings.libcomponents</groupId>
         <artifactId>libcomponents</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <groupId>com.zachsthings.libcomponents</groupId>
     <artifactId>libcomponents-bukkit</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>libcomponents for Bukkit</name>
     <description>The Bukkit interface for libcomponents</description>
 
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.1-R3-SNAPSHOT</version>
+            <version>1.1-R3</version>
         </dependency>
 
         <dependency>
