@@ -7,15 +7,9 @@
     </parent>
     <groupId>com.zachsthings.libcomponents</groupId>
     <artifactId>libcomponents-bukkit</artifactId>
-    <version>${project.parent.version}</version>
+    <version>1.0-SNAPSHOT</version>
     <name>libcomponents for Bukkit</name>
     <description>The Bukkit interface for libcomponents</description>
-
-    <scm>
-        <connection>scm:git:git://github.com/zml2008/libcomponents.git</connection>
-        <url>https://github.com/zml2008/libcomponents</url>
-        <developerConnection>scm:git:git@github.com:zml2008/libcomponents.git</developerConnection>
-    </scm>
 
     <repositories>
         <repository>
@@ -51,32 +45,8 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <!-- Plugins -->
         <plugins>
-            <!-- Compile plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-            </plugin>
-
-            <!-- JAR creation plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>true</addMavenDescriptor>
-                        <manifest>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -90,20 +60,12 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>net.sf.opencsv:opencsv</include>
                                     <include>com.zachsthings.libcomponents:libcomponents-core</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Release -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.1</version><!--$NO-MVN-MAN-VER$-->
             </plugin>
         </plugins>
     </build>

@@ -7,10 +7,10 @@
   <description>libcomponents provides a flexible system of components to allow modular subplugins</description>
   <packaging>pom</packaging>
 
-    <modules>
-        <module>core</module>
-        <module>bukkit</module>
-    </modules>
+  <modules>
+    <module>core</module>
+    <module>bukkit</module>
+  </modules>
 
   <scm>
     <connection>scm:git:git://github.com/zml2008/libcomponents.git</connection>
@@ -24,7 +24,7 @@
       <url>http://mvn2.sk89q.com/repo</url>
     </repository>
     <repository>
-      <id>bukkit-repo</id>
+      <id>bukkit-rep</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
   </repositories>
@@ -65,20 +65,14 @@
         </configuration>
       </plugin>
 
-      <!-- Assembly -->
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-2</version><!--$NO-MVN-MAN-VER$-->
-        <configuration>
-          <descriptor>${basedir}/src/main/assembly/default.xml</descriptor>
-        </configuration>
-      </plugin>
-
       <!-- Release -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.1</version><!--$NO-MVN-MAN-VER$-->
+        <version>2.2.2</version>
+        <configuration>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+        </configuration>
       </plugin>
     </plugins>
   </build>
