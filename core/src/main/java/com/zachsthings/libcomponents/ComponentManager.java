@@ -57,7 +57,7 @@ public abstract class ComponentManager<T extends AbstractComponent> {
                     if (handler != null) {
                         if (!handler.handle(component, field, annotation)) {
                             logger.log(Level.WARNING, "Component "
-                                    + component.getClass().getSimpleName() +
+                                    + component.getInformation().friendlyName() +
                                     " could not be enabled! Error in annotation handler for field " + field);
                         }
                     }
@@ -65,8 +65,9 @@ public abstract class ComponentManager<T extends AbstractComponent> {
             }
             component.enable();
             component.setEnabled(true);
-            logger.log(Level.FINEST, "Component " +
-                    component.getClass().getSimpleName() + " successfully enabled!");
+            component.saveConfig();
+            logger.log(Level.WARNING, "Component " +
+                    component.getInformation().friendlyName() + " successfully enabled!");
         }
 
     }

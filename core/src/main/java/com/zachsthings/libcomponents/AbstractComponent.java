@@ -1,5 +1,6 @@
 package com.zachsthings.libcomponents;
 
+import com.zachsthings.libcomponents.config.ConfigurationFile;
 import com.zachsthings.libcomponents.config.ConfigurationNode;
 import com.zachsthings.libcomponents.loader.ComponentLoader;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
@@ -50,6 +51,12 @@ public abstract class AbstractComponent {
     public <T extends ConfigurationBase>  T saveConfig(T config) {
         config.save(getRawConfiguration());
         return config;
+    }
+
+    public void saveConfig() {
+        if (rawConfiguration != null && rawConfiguration instanceof ConfigurationFile) {
+            ((ConfigurationFile) rawConfiguration).save();
+        }
     }
 
     public boolean isEnabled() {
