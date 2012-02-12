@@ -23,23 +23,39 @@ public class ConfigurationBaseTest {
     private static final int INT_VALUE = 42;
     private static final String NESTED_STRING_KEY = "nested.key";
     private static final String NESTED_STRING_VALUE = "cute asian cadvahns";
-    private static final String MAP_STRING_STRING_KEY = "map-string-string";
+    private static final String MAP_STRING_STRING_KEY = "map.string-string";
     private static final Map<String, String> MAP_STRING_STRING_VALUE = createMapStringString();
     private static final String SET_INTEGER_KEY = "int-set";
     private static final Set<Integer> SET_INTEGER_VALUE = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4 , 5));
+    private static final String NESTED_MAP_KEY = "map.nested";
+    private static final Map<String, Map<String, Object>> NESTED_MAP_VALUE = createNestedMap();
+    private static final String DEFAULT_KEY = "dead";
+    private static final String DEFAULT_VALUE = "parrot";
 
     private static class LocalConfiguration extends ConfigurationBase {
         @Setting(BOOLEAN_KEY) public boolean booleanSetting;
         @Setting(INT_KEY) public int intSetting;
         @Setting(NESTED_STRING_KEY) public String nestedStringSetting;
         @Setting(MAP_STRING_STRING_KEY) public Map<String, String> mapStringStringSetting;
-        @Setting(SET_INTEGER_KEY) public Set<Integer> setInteger;
+        @Setting(SET_INTEGER_KEY) public Set<Integer> setIntegerSetting;
+        @Setting(NESTED_MAP_KEY) public Map<String, Map<String, Object>> nestedMapSetting;
+        @Setting(DEFAULT_KEY) public String defaultSetting = DEFAULT_VALUE;
     }
 
     private static Map<String, String> createMapStringString() {
         Map<String, String> result = new HashMap<String, String>();
         result.put("hello", "world");
         result.put("command", "book");
+        return result;
+    }
+    
+    private static Map<String, Map<String, Object>> createNestedMap() {
+        Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+        result.put("one", (Map)createMapStringString());
+        Map<String, Object> two = new HashMap<String, Object>();
+        two.put("something", "else");
+        two.put("andnowforsomething", "completelydifferent");
+        result.put("two", two);
         return result;
     }
 
@@ -57,6 +73,7 @@ public class ConfigurationBaseTest {
         node.setProperty(NESTED_STRING_KEY, NESTED_STRING_VALUE);
         node.setProperty(MAP_STRING_STRING_KEY, MAP_STRING_STRING_VALUE);
         node.setProperty(SET_INTEGER_KEY, new ArrayList<Integer>(SET_INTEGER_VALUE));
+        node.setProperty(NESTED_MAP_KEY, NESTED_MAP_VALUE);
         config = new LocalConfiguration();
         config.load(node);
     }
@@ -83,7 +100,17 @@ public class ConfigurationBaseTest {
 
     @Test
     public void testSetIntegerValue() {
-        assertEquals(SET_INTEGER_VALUE, config.setInteger);
+        assertEquals(SET_INTEGER_VALUE, config.setIntegerSetting);
+    }
+    
+    @Test
+    public void testNestedMapValue() {
+        assertEquals(NESTED_MAP_VALUE, config.nestedMapSetting);
+    }
+    
+    @Test
+    public void testDefaultValue() {
+        assertEquals(DEFAULT_VALUE, config.defaultSetting);
     }
 
 }

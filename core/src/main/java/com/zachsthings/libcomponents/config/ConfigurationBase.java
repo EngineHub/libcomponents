@@ -23,7 +23,7 @@ public abstract class ConfigurationBase {
         if (getClass().isAnnotationPresent(SettingBase.class)) {
             node = node.getNode(getClass().getAnnotation(SettingBase.class).value());
         }
-        for (Field field : getClass().getFields()) {
+        for (Field field : getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Setting.class)) continue;
             String key = field.getAnnotation(Setting.class).value();
             final Object value = smartCast(field.getGenericType(), node.getProperty(key));
