@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zachsthings.libcomponents</groupId>
+        <artifactId>libcomponents</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <groupId>com.zachsthings.libcomponents</groupId>
+    <artifactId>libcomponents-spout</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <name>libcomponents for Spout</name>
+    <description>The Spout interface for libcomponents</description>
+
+    <repositories>
+        <repository>
+            <id>sk89q-mvn2</id>
+            <url>http://mvn2.sk89q.com/repo</url>
+        </repository>
+        <repository>
+            <id>spout-repo</id>
+            <url>http://repo.spout.org/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+
+        <!-- Required component -->
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>5.1</version>
+        </dependency>
+        
+        <!-- Required component -->
+        <dependency>
+            <groupId>org.spout</groupId>
+            <artifactId>spoutapi</artifactId>
+            <version>dev-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zachsthings.libcomponents</groupId>
+            <artifactId>libcomponents-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Plugins -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.zachsthings.libcomponents:libcomponents-core</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

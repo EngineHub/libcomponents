@@ -24,7 +24,7 @@ public abstract class AbstractComponent {
 
     private boolean enabled;
 
-    public void setUp(ComponentLoader loader, ComponentInformation info) {
+    protected void setUp(ComponentLoader loader, ComponentInformation info) {
         this.loader = loader;
         this.info = info;
     }
