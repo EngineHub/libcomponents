@@ -77,7 +77,7 @@ public abstract class BukkitComponent extends AbstractComponent implements Comma
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
         try {
-            commands.execute(alias, args, sender, sender);
+            commands.execute(command.getName(), args, sender, sender);
             return true;
         } catch (CommandPermissionsException e) {
             sender.sendMessage(ChatColor.RED + "You don't have permission.");
