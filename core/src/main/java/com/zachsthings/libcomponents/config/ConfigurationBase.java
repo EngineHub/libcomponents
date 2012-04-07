@@ -3,6 +3,9 @@ package com.zachsthings.libcomponents.config;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.zachsthings.libcomponents.config.ConfigUtil.prepareSerialization;
 import static com.zachsthings.libcomponents.config.ConfigUtil.smartCast;
@@ -23,7 +26,8 @@ public abstract class ConfigurationBase {
         if (getClass().isAnnotationPresent(SettingBase.class)) {
             node = node.getNode(getClass().getAnnotation(SettingBase.class).value());
         }
-        for (Field field : getClass().getDeclaredFields()) {
+        
+        for (Field field : getFieldsRecur(getClass())) {
             if (!field.isAnnotationPresent(Setting.class)) continue;
             String key = field.getAnnotation(Setting.class).value();
             final Object value = smartCast(field.getGenericType(), node.getProperty(key));
@@ -46,7 +50,7 @@ public abstract class ConfigurationBase {
         if (getClass().isAnnotationPresent(SettingBase.class)) {
             node = node.getNode(getClass().getAnnotation(SettingBase.class).value());
         }
-        for (Field field : getClass().getFields()) {
+        for (Field field : getFieldsRecur(getClass())) {
             field.setAccessible(true);
             if (!field.isAnnotationPresent(Setting.class)) continue;
             String key = field.getAnnotation(Setting.class).value();
@@ -57,5 +61,17 @@ public abstract class ConfigurationBase {
                 e.printStackTrace();
             }
         }
+    }
+    private static List<Field> getFieldsRecur(Class<?> clazz) {
+        return getFieldsRecur(clazz, false);
+    }
+    
+    private static List<Field> getFieldsRecur(Class<?> clazz, boolean includeObject) {
+        List<Field> fields = new ArrayList<Field>();
+        while(clazz != null && (includeObject || !Object.class.equals(clazz))) {
+            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 }

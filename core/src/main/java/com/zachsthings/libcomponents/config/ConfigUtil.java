@@ -22,7 +22,10 @@ import com.zachsthings.libcomponents.config.typeconversions.*;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author zml2008
@@ -30,13 +33,15 @@ import java.util.*;
 public class ConfigUtil {
     private static final List<TypeConversion> typeConversions = new ArrayList<TypeConversion>(
             Arrays.asList(new SameTypeConversion(),
-            new StringTypeConversion(),
-            new BooleanTypeConversion(),
-            new NumberTypeConversion(),
-            new SetTypeConversion(),
-            new ListTypeConversion(),
-            new MapTypeConversion()
-    ));
+                    new StringTypeConversion(),
+                    new BooleanTypeConversion(),
+                    new NumberTypeConversion(),
+                    new EnumTypeConversion(),
+                    /*new ConfigurationBaseTypeConversion(),*/
+                    new SetTypeConversion(),
+                    new ListTypeConversion(),
+                    new MapTypeConversion()
+            ));
 
     public static Object smartCast(Type genericType, Object value) {
         if (value == null) {
@@ -58,19 +63,21 @@ public class ConfigUtil {
             neededGenerics = new Type[0];
         }
 
-        if (target == null) return null;
+        if (target == null) {
+            return null;
+        }
 
         Object ret = null;
-        
+
         for (TypeConversion conversion : typeConversions) {
             if ((ret = conversion.handle(target, neededGenerics, value)) != null) {
                 break;
             }
         }
-        
+
         return ret;
     }
-    
+
     public static void registerTypeConversion(TypeConversion conversion) {
         typeConversions.add(conversion);
     }
