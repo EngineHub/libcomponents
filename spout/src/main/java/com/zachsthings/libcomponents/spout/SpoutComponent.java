@@ -36,7 +36,7 @@ public abstract class SpoutComponent extends AbstractComponent implements Named 
      * The BasePlugin is a base for all plugins that use this component system.
      */
     private BasePlugin plugin;
-    
+
     private CommandRegistrationsFactory<Class<?>> commandRegistration;
 
     protected void setUp(BasePlugin plugin) {
@@ -51,37 +51,36 @@ public abstract class SpoutComponent extends AbstractComponent implements Named 
     // -- Command registration
     public void registerCommands(final Class<?> clazz)  {
         if (plugin.lowPriorityCommandRegistration) {
-            BasePlugin.game().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            BasePlugin.engine().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                 public void run() {
-                    BasePlugin.game().getRootCommand().addSubCommands(SpoutComponent.this, clazz, commandRegistration);
+                    BasePlugin.engine().getRootCommand().addSubCommands(SpoutComponent.this, clazz, commandRegistration);
                 }
             }, 0L);
         } else {
-            BasePlugin.game().getRootCommand().addSubCommands(this, clazz, commandRegistration);
+            BasePlugin.engine().getRootCommand().addSubCommands(this, clazz, commandRegistration);
         }
     }
 
     public void unregisterCommands() {
-        BasePlugin.game().getRootCommand().removeChildren(this);
+        BasePlugin.engine().getRootCommand().removeChildren(this);
     }
-    
+
     protected void registerEvents(Listener listener) {
-        
+
     }
 
     @Override
     public Map<String, String> getCommands() {
-        Collection<org.spout.api.command.Command> cmds = BasePlugin.game().getRootCommand().getChildCommands();
+        Collection<org.spout.api.command.Command> cmds = BasePlugin.engine().getRootCommand().getChildCommands();
         Map<String, String> ret = new HashMap<String, String>();
         for (org.spout.api.command.Command cmd : cmds) {
-            if (cmd.unlock(this)) {
-                cmd.lock(this);
+            if (cmd.isOwnedBy(this)) {
                 ret.put(cmd.getPreferredName(), cmd.getUsage(new String[1], 0));
             }
         }
         return ret;
     }
-    
+
     public String getName() {
         return getInformation().friendlyName();
     }

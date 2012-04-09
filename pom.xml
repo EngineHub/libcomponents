@@ -10,6 +10,7 @@
   <modules>
     <module>core</module>
     <module>bukkit</module>
+    <module>spout</module>
   </modules>
 
   <scm>

@@ -20,7 +20,7 @@ package com.zachsthings.libcomponents.spout;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.zachsthings.libcomponents.ComponentManager;
 import com.zachsthings.libcomponents.InvalidComponentException;
-import org.spout.api.Game;
+import org.spout.api.Engine;
 import org.spout.api.Spout;
 import org.spout.api.command.CommandSource;
 import org.spout.api.event.Event;
@@ -37,12 +37,12 @@ import java.util.zip.ZipEntry;
  */
 public abstract class BasePlugin extends CommonPlugin {
 
-    public static Game game() {
-        return Spout.getGame();
+    public static Engine engine() {
+        return Spout.getEngine();
     }
 
     public static <T extends Event> T callEvent(T event) {
-        return game().getEventManager().callEvent(event);
+        return engine().getEventManager().callEvent(event);
     }
 
     public boolean lowPriorityCommandRegistration;
