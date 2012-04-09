@@ -1,0 +1,8 @@
+1.1:
+ - Added some new TypeConversions, correctly handle fields from superclasses and private fields in ConfigurationBases
+ - Use the command's original name instead of the alias
+ - Added Spout support
+ - Allow private fields for configurations
+ - Save configurations for components with raw configurations that are ConfigurationFiles
+1.0:
+ - Initial release
