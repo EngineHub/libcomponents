@@ -3,11 +3,11 @@
     <parent>
         <groupId>com.zachsthings.libcomponents</groupId>
         <artifactId>libcomponents</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>com.zachsthings.libcomponents</groupId>
     <artifactId>libcomponents-spout</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>libcomponents for Spout</name>
     <description>The Spout interface for libcomponents</description>
 
