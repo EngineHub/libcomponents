@@ -13,10 +13,6 @@
 
     <repositories>
         <repository>
-            <id>sk89q-mvn2</id>
-            <url>http://mvn2.sk89q.com/repo</url>
-        </repository>
-        <repository>
             <id>spout-repo</id>
             <url>http://repo.spout.org/</url>
         </repository>
@@ -24,13 +20,6 @@
 
     <dependencies>
 
-        <!-- Required component -->
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>5.1</version>
-        </dependency>
-        
         <!-- Required component -->
         <dependency>
             <groupId>org.spout</groupId>

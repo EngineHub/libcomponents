@@ -1,35 +1,21 @@
-/*
- * libcomponents
- * Copyright (C) 2012 zml2008
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package com.zachsthings.libcomponents.spout;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.zachsthings.libcomponents.ComponentManager;
 import com.zachsthings.libcomponents.InvalidComponentException;
+import com.zachsthings.libcomponents.config.ConfigurationFile;
 import org.spout.api.Engine;
 import org.spout.api.Spout;
 import org.spout.api.command.CommandSource;
 import org.spout.api.event.Event;
 import org.spout.api.exception.CommandException;
+import org.spout.api.exception.ConfigurationException;
 import org.spout.api.geo.World;
 import org.spout.api.plugin.CommonPlugin;
+import org.spout.api.util.config.Configuration;
 
 import java.io.*;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 
 /**
@@ -47,11 +33,12 @@ public abstract class BasePlugin extends CommonPlugin {
 
     public boolean lowPriorityCommandRegistration;
 
-    protected YAMLProcessor config;
+    protected Configuration config;
+    private SpoutConfigurationFile abstractConfig;
     protected ComponentManager<SpoutComponent> componentManager;
 
     public void onDisable() {
-        this.getGame().getScheduler().cancelTasks(this);
+        this.getEngine().getScheduler().cancelTasks(this);
         componentManager.unloadComponents();
     }
 
@@ -80,21 +67,30 @@ public abstract class BasePlugin extends CommonPlugin {
 
         componentManager.enableComponents();
 
-        config.save();
+        try {
+            config.save();
+        } catch (ConfigurationException e) {
+            getLogger().log(Level.WARNING, "Error saving configuration for " + getName(), e);
+        }
     }
 
     public abstract void registerComponentLoaders();
 
     public void loadConfiguration() {
         config = populateConfiguration();
+        abstractConfig = new SpoutConfigurationFile(config);
 
-        lowPriorityCommandRegistration = config.getBoolean("low-priority-command-registration", false);
+        lowPriorityCommandRegistration = config.getNode("low-priority-command-registration").getBoolean(false);
     }
 
-    public abstract YAMLProcessor populateConfiguration();
+    public abstract Configuration populateConfiguration();
 
-    public YAMLProcessor getGlobalConfiguration() {
+    public Configuration getGlobalConfiguration() {
         return config;
+    }
+
+    public ConfigurationFile getAbstractedConfiguration() {
+        return abstractConfig;
     }
 
     public ComponentManager<SpoutComponent> getComponentManager() {

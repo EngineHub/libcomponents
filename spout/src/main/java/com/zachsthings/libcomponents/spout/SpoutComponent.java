@@ -1,26 +1,12 @@
-/*
- * libcomponents
- * Copyright (C) 2012 zml2008
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package com.zachsthings.libcomponents.spout;
 
 import com.zachsthings.libcomponents.AbstractComponent;
+import org.spout.api.Spout;
 import org.spout.api.command.*;
 import org.spout.api.command.annotated.*;
+import org.spout.api.event.HandlerList;
 import org.spout.api.event.Listener;
+import org.spout.api.scheduler.TaskPriority;
 import org.spout.api.util.Named;
 
 import java.util.Collection;
@@ -46,16 +32,17 @@ public abstract class SpoutComponent extends AbstractComponent implements Named 
 
     public void disable() {
         unregisterCommands();
+        HandlerList.unregisterAll(this);
     }
 
     // -- Command registration
-    public void registerCommands(final Class<?> clazz)  {
+    protected void registerCommands(final Class<?> clazz)  {
         if (plugin.lowPriorityCommandRegistration) {
             BasePlugin.engine().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                 public void run() {
                     BasePlugin.engine().getRootCommand().addSubCommands(SpoutComponent.this, clazz, commandRegistration);
                 }
-            }, 0L);
+            }, 0L, TaskPriority.LOWEST);
         } else {
             BasePlugin.engine().getRootCommand().addSubCommands(this, clazz, commandRegistration);
         }
@@ -66,7 +53,7 @@ public abstract class SpoutComponent extends AbstractComponent implements Named 
     }
 
     protected void registerEvents(Listener listener) {
-
+        Spout.getEngine().getEventManager().registerEvents(listener, this);
     }
 
     @Override
@@ -75,7 +62,7 @@ public abstract class SpoutComponent extends AbstractComponent implements Named 
         Map<String, String> ret = new HashMap<String, String>();
         for (org.spout.api.command.Command cmd : cmds) {
             if (cmd.isOwnedBy(this)) {
-                ret.put(cmd.getPreferredName(), cmd.getUsage(new String[1], 0));
+                ret.put(cmd.getPreferredName(), cmd.getUsage());
             }
         }
         return ret;
