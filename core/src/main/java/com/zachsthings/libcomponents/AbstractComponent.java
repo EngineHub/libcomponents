@@ -19,7 +19,7 @@ public abstract class AbstractComponent {
     private ConfigurationNode rawConfiguration;
 
     private ComponentLoader loader;
-    
+
     private ComponentInformation info;
 
     private boolean enabled;
@@ -47,9 +47,10 @@ public abstract class AbstractComponent {
         config.load(getRawConfiguration());
         return config;
     }
-    
+
     public <T extends ConfigurationBase>  T saveConfig(T config) {
         config.save(getRawConfiguration());
+        saveConfig();
         return config;
     }
 
@@ -70,11 +71,11 @@ public abstract class AbstractComponent {
     public ComponentLoader getComponentLoader() {
         return loader;
     }
-    
+
     public ComponentInformation getInformation() {
         return info;
     }
-    
+
     public ConfigurationNode getRawConfiguration() {
         if (rawConfiguration != null) {
             return rawConfiguration;
@@ -82,6 +83,6 @@ public abstract class AbstractComponent {
             return rawConfiguration = getComponentLoader().getConfiguration(this);
         }
     }
-    
+
     public abstract Map<String, String> getCommands();
 }
