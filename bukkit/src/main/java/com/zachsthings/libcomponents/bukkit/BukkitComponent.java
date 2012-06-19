@@ -65,7 +65,7 @@ public abstract class BukkitComponent extends AbstractComponent implements Comma
                 public void run() {
                     commandRegistration.register(clazz);
                 }
-            }, 0L);
+            }, 1L);
         } else {
             commandRegistration.register(clazz);
         }
