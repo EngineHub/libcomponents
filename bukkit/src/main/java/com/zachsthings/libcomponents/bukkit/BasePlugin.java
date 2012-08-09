@@ -38,7 +38,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 /**
- * @author zml2008
+ * Base plugin for Bukkit libcomponents users
  */
 public abstract class BasePlugin extends JavaPlugin {
 
@@ -102,19 +102,42 @@ public abstract class BasePlugin extends JavaPlugin {
 
     public abstract void registerComponentLoaders();
 
+    /**
+     * Create a new configuration. This method is only called once on server start
+     * and should be used to setup base configuration information and migrate legacy configurations
+     *
+     * @return The initialized configuration
+     */
+    public YAMLProcessor createConfiguration() {
+        return populateConfiguration();
+    }
+
     public void loadConfiguration() {
-        config = populateConfiguration();
+        if  (config == null) {
+            config = createConfiguration();
+        }
+        populateConfiguration(config);
 
         lowPriorityCommandRegistration = config.getBoolean("low-priority-command-registration", false);
         opPermissions = config.getBoolean("op-permissions", true);
     }
 
-    public abstract YAMLProcessor populateConfiguration();
+    /**
+     * No longer used
+     *
+     * @return The new configuration instance
+     * @deprecated see {@link #populateConfiguration(YAMLProcessor)} and {@link #createConfiguration()}
+     */
+    @Deprecated
+    public YAMLProcessor populateConfiguration() {return config;}
+
+    public void populateConfiguration(YAMLProcessor processor) {
+    }
 
     /**
      * Get the permissions resolver.
      *
-     * @return
+     * @return The permissions resolver
      */
     public PermissionsResolverManager getPermissionsResolver() {
         return PermissionsResolverManager.getInstance();
@@ -178,9 +201,9 @@ public abstract class BasePlugin extends JavaPlugin {
     /**
      * Checks permissions.
      *
-     * @param sender
-     * @param perm
-     * @return
+     * @param sender The sender to check
+     * @param perm The permission to check
+     * @return Whether the sender has the permission
      */
     public boolean hasPermission(CommandSender sender, String perm) {
         if (!(sender instanceof Player)) {
@@ -207,9 +230,10 @@ public abstract class BasePlugin extends JavaPlugin {
     /**
      * Checks permissions and throws an exception if permission is not met.
      *
-     * @param sender
-     * @param perm
-     * @throws com.sk89q.minecraft.util.commands.CommandPermissionsException
+     * @param sender The sender to check
+     * @param perm the permission to check
+     * @throws com.sk89q.minecraft.util.commands.CommandPermissionsException if the sender
+     * doesn't have the required permission
      */
     public void checkPermission(CommandSender sender, String perm)
             throws CommandPermissionsException {
