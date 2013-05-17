@@ -27,6 +27,7 @@ import com.zachsthings.libcomponents.InvalidComponentException;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -207,14 +208,16 @@ public abstract class BasePlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
         if (!(sender instanceof Player)) {
-            return ((sender.isOp() && (opPermissions || sender instanceof ConsoleCommandSender))
+            return ((sender.isOp() && opPermissions) || sender instanceof ConsoleCommandSender
+                    || sender instanceof BlockCommandSender
                     || getPermissionsResolver().hasPermission(sender.getName(), perm));
         }
         return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
 
     public boolean hasPermission(CommandSender sender, World world, String perm) {
-        if ((sender.isOp() && opPermissions) || sender instanceof ConsoleCommandSender) {
+        if ((sender.isOp() && opPermissions) || sender instanceof ConsoleCommandSender
+                || sender instanceof BlockCommandSender) {
             return true;
         }
 
