@@ -10,7 +10,6 @@
   <modules>
     <module>core</module>
     <module>bukkit</module>
-    <module>spout</module>
   </modules>
 
   <scm>
@@ -22,7 +21,7 @@
   <repositories>
     <repository>
       <id>sk89q-mvn2</id>
-      <url>http://mvn2.sk89q.com/repo</url>
+      <url>http://maven.sk89q.com/repo</url>
     </repository>
     <repository>
       <id>bukkit-rep</id>

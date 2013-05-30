@@ -14,7 +14,7 @@
     <repositories>
         <repository>
             <id>sk89q-mvn2</id>
-            <url>http://mvn2.sk89q.com/repo</url>
+            <url>http://maven.sk89q.com/repo</url>
         </repository>
         <repository>
             <id>bukkit-repo</id>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>5.1</version>
+            <version>5.5.6</version>
         </dependency>
 
         <!-- Bukkit -->
