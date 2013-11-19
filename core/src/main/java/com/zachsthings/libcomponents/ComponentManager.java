@@ -66,7 +66,7 @@ public abstract class ComponentManager<T extends AbstractComponent> {
             component.enable();
             component.setEnabled(true);
             component.saveConfig();
-            logger.log(Level.FINEST, "Component " +
+            logger.log(Level.INFO, "Component " +
                     component.getInformation().friendlyName() + " successfully enabled!");
         }
 
