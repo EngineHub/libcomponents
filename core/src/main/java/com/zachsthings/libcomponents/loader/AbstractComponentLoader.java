@@ -19,6 +19,7 @@
 package com.zachsthings.libcomponents.loader;
 
 import com.zachsthings.libcomponents.AbstractComponent;
+import com.zachsthings.libcomponents.TemplateComponent;
 import com.zachsthings.libcomponents.ComponentInformation;
 import com.zachsthings.libcomponents.InvalidComponentException;
 import com.zachsthings.libcomponents.config.ConfigurationFile;
@@ -76,7 +77,7 @@ public abstract class AbstractComponentLoader implements ComponentLoader {
     }
     
     public boolean isComponentClass(Class<?> clazz) {
-        return clazz != null && AbstractComponent.class.isAssignableFrom(clazz);
+        return clazz != null && AbstractComponent.class.isAssignableFrom(clazz) && !clazz.isAnnotationPresent(TemplateComponent.class);
     }
     
     public String toFileName(AbstractComponent component) {
