@@ -6,6 +6,23 @@
   <name>libcomponents core</name>
   <description>The core, non-implementation-specific libcomponents</description>
 
+  <distributionManagement>
+    <site>
+      <id>sk89q-docs-upload</id>
+      <url>ftp://sk89q-maven-deploy/worldedit/</url>
+    </site>
+
+    <!-- The CI server uses these -->
+    <repository>
+      <id>maven.sk89q.com</id>
+      <url>http://maven.sk89q.com/artifactory/libs-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven.sk89q.com-snapshot</id>
+      <url>http://maven.sk89q.com/artifactory/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
