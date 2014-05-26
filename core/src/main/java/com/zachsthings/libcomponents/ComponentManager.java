@@ -29,20 +29,26 @@ public abstract class ComponentManager<T extends AbstractComponent> {
     }
 
 
-    public synchronized boolean loadComponents() throws InvalidComponentException {
+    public synchronized boolean loadComponents() {
+        boolean success = true;
         for (ComponentLoader loader : loaders) {
             for (AbstractComponent baseComponent : loader.loadComponents()) {
-                if (!componentClass.isAssignableFrom(baseComponent.getClass())) {
-                    throw new InvalidComponentException(baseComponent.getClass(), "Component is not an instance of " + componentClass.getCanonicalName());
+                try {
+                    if (!componentClass.isAssignableFrom(baseComponent.getClass())) {
+                        throw new InvalidComponentException(baseComponent.getClass(), "Component is not an instance of " + componentClass.getCanonicalName());
+                    }
+                    T component = componentClass.cast(baseComponent);
+                    ComponentInformation info = component.getClass().getAnnotation(ComponentInformation.class);
+                    component.setUp(loader, info);
+                    setUpComponent(component);
+                    registeredComponents.put(info.friendlyName().replaceAll(" ", "-").toLowerCase(), component);
+                } catch (Throwable t) {
+                    logger.severe(t.getMessage());
+                    success = false;
                 }
-                T component = componentClass.cast(baseComponent);
-                ComponentInformation info = component.getClass().getAnnotation(ComponentInformation.class);
-                component.setUp(loader, info);
-                setUpComponent(component);
-                registeredComponents.put(info.friendlyName().replaceAll(" ", "-").toLowerCase(), component);
             }
         }
-        return true;
+        return success;
     }
 
     protected abstract void setUpComponent(T component);

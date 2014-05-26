@@ -90,12 +90,7 @@ public abstract class BasePlugin extends JavaPlugin {
 
         registerComponentLoaders();
 
-        try {
-            componentManager.loadComponents();
-        } catch (InvalidComponentException e) {
-            getLogger().severe(e.getMessage());
-        }
-
+        componentManager.loadComponents();
         componentManager.enableComponents();
 
         config.save();
