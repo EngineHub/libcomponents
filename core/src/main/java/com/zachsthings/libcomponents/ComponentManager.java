@@ -102,11 +102,11 @@ public abstract class ComponentManager<T extends AbstractComponent> {
         return registeredComponents.get(friendlyName);
     }
     
-    public synchronized <T extends Annotation> void registerAnnotationHandler(Class<T> annotation, AnnotationHandler<T> handler) {
+    public synchronized <A extends Annotation> void registerAnnotationHandler(Class<A> annotation, AnnotationHandler<A> handler) {
         annotationHandlers.put(annotation, handler);
     }
     
-    public synchronized <T extends Annotation> AnnotationHandler<T> getAnnotationHandler(Class<T> annotation) {
-        return (AnnotationHandler<T>)annotationHandlers.get(annotation);
+    public synchronized <A extends Annotation> AnnotationHandler<A> getAnnotationHandler(Class<A> annotation) {
+        return (AnnotationHandler<A>) annotationHandlers.get(annotation);
     }
 }
