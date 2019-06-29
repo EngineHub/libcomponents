@@ -7,7 +7,7 @@
     </parent>
     <groupId>com.zachsthings.libcomponents</groupId>
     <artifactId>libcomponents-bukkit</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <name>libcomponents for Bukkit</name>
     <description>The Bukkit interface for libcomponents</description>
 
