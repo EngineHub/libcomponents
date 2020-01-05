@@ -60,13 +60,15 @@ public abstract class JarFilesComponentLoader extends FileComponentLoader {
                 Class<?> clazz = null;
                 try {
                     clazz = Class.forName(formatPath(next.getName()), true, loader);
-                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                } catch (ClassNotFoundException e) {
                     getLogger().warning("Error loading class " + next.getName() + ": " + e.getMessage());
                     e.printStackTrace();
-
-                    if (e instanceof NoClassDefFoundError) {
-                        throw (NoClassDefFoundError) e;
-                    }
+                } catch (NoClassDefFoundError e) {
+                    // Don't terminate the class loading for missing definitions,
+                    // loading certain libraries like HikariCP in the way we're doing so here
+                    // can result in overly aggressive errors that result in an otherwise working system
+                    // being killed.
+                    getLogger().warning("Error loading class " + next.getName() + ": " + e.getMessage());
                 }
 
                 if (!isComponentClass(clazz)) continue;
