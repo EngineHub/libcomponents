@@ -60,8 +60,13 @@ public abstract class JarFilesComponentLoader extends FileComponentLoader {
                 Class<?> clazz = null;
                 try {
                     clazz = Class.forName(formatPath(next.getName()), true, loader);
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                    getLogger().warning("Error loading class " + next.getName() + ": " + e.getMessage());
                     e.printStackTrace();
+
+                    if (e instanceof NoClassDefFoundError) {
+                        throw (NoClassDefFoundError) e;
+                    }
                 }
 
                 if (!isComponentClass(clazz)) continue;
