@@ -49,27 +49,32 @@ public abstract class ComponentManager<T extends AbstractComponent> {
 
     public synchronized void enableComponents() {
         for (T component : registeredComponents.values()) {
-            for (Field field : component.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                for (Annotation annotation : field.getAnnotations()) {
-                    AnnotationHandler<Annotation> handler =
-                            (AnnotationHandler<Annotation>)annotationHandlers.get(annotation.annotationType());
-                    if (handler != null) {
-                        if (!handler.handle(component, field, annotation)) {
-                            logger.log(Level.WARNING, "Component "
-                                    + component.getInformation().friendlyName() +
-                                    " could not be enabled! Error in annotation handler for field " + field);
+            try {
+                for (Field field : component.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    for (Annotation annotation : field.getAnnotations()) {
+                        AnnotationHandler<Annotation> handler =
+                                (AnnotationHandler<Annotation>) annotationHandlers.get(annotation.annotationType());
+                        if (handler != null) {
+                            if (!handler.handle(component, field, annotation)) {
+                                logger.log(Level.WARNING, "Component "
+                                        + component.getInformation().friendlyName() +
+                                        " could not be enabled! Error in annotation handler for field " + field);
+                            }
                         }
                     }
                 }
+                component.enable();
+                component.setEnabled(true);
+                component.saveConfig();
+                logger.log(Level.FINEST, "Component " +
+                        component.getInformation().friendlyName() + " successfully enabled!");
+            } catch (Throwable t) {
+                logger.log(Level.SEVERE, "Component " +
+                        component.getInformation().friendlyName() + " failed to load!");
+                t.printStackTrace();
             }
-            component.enable();
-            component.setEnabled(true);
-            component.saveConfig();
-            logger.log(Level.FINEST, "Component " +
-                    component.getInformation().friendlyName() + " successfully enabled!");
         }
-
     }
     
     public synchronized void unloadComponents() {
