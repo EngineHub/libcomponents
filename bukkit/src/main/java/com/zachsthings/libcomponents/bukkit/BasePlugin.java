@@ -32,6 +32,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -41,7 +45,7 @@ import java.util.zip.ZipEntry;
 /**
  * Base plugin for Bukkit libcomponents users
  */
-public abstract class BasePlugin extends JavaPlugin {
+public abstract class BasePlugin extends JavaPlugin implements Listener {
 
     public static Server server() {
         return Bukkit.getServer();
@@ -58,15 +62,19 @@ public abstract class BasePlugin extends JavaPlugin {
     protected YAMLProcessor config;
     protected ComponentManager<BukkitComponent> componentManager;
 
+    @Override
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
         componentManager.unloadComponents();
     }
 
+    @Override
     public void onEnable() {
         // Make the data folder for the plugin where configuration files
         // and other data files will be stored
         getDataFolder().mkdirs();
+
+        server().getPluginManager().registerEvents(this, this);
 
         loadConfiguration();
 
@@ -86,6 +94,20 @@ public abstract class BasePlugin extends JavaPlugin {
                 commands.setInjector(new SimpleInjector(component));
                 component.setUp(BasePlugin.this, commands);
             }
+
+            private Plugin getPlugin(String pluginName) {
+                return Bukkit.getPluginManager().getPlugin(pluginName);
+            }
+
+            @Override
+            protected boolean isPluginRegistered(String pluginName) {
+                return getPlugin(pluginName) != null;
+            }
+
+            @Override
+            protected boolean isPluginEnabled(String pluginName) {
+                return getPlugin(pluginName).isEnabled();
+            }
         };
 
         registerComponentLoaders();
@@ -99,6 +121,11 @@ public abstract class BasePlugin extends JavaPlugin {
         componentManager.enableComponents();
 
         config.save();
+    }
+
+    @EventHandler
+    public void onPluginEnable(PluginEnableEvent event) {
+        componentManager.handlePluginEnable(event.getPlugin().getName());
     }
 
     public abstract void registerComponentLoaders();
