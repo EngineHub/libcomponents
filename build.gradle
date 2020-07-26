@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.5'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group = 'com.zachsthings.libcomponents'
+    version = '1.3.0-SNAPSHOT'
+}
+
+allprojects {
+    apply plugin: 'com.jfrog.artifactory'
+}
+
+if (!project.hasProperty("artifactory_contextUrl")) ext.artifactory_contextUrl = ""
+if (!project.hasProperty("artifactory_user")) ext.artifactory_user = ""
+if (!project.hasProperty("artifactory_password")) ext.artifactory_password = ""
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    publish {
+        repository {
+            repoKey = project.version.contains("SNAPSHOT") ? 'libs-snapshot-local' : 'libs-release-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
+    }
+
+    resolve {
+        repository {
+            repoKey = 'repo'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
+    }
+}

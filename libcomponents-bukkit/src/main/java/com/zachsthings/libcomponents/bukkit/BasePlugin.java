@@ -183,7 +183,7 @@ public abstract class BasePlugin extends JavaPlugin implements Listener {
     /**
      * Create a default configuration file from the .jar.
      *
-     * @param name
+     * @param name the filename for the default configuration file
      */
     public void createDefaultConfiguration(String name) {
         File actual = new File(getDataFolder(), name);

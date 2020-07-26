@@ -1,0 +1,4 @@
+rootProject.name = 'libcomponents'
+
+include 'libcomponents-core'
+include 'libcomponents-bukkit'

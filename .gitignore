@@ -1,0 +1,26 @@
+# IntelliK
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Netbeans
+nbproject/
+
+# Gradle
+.gradle
+build/
+
+# vim
+.*.sw[a-p]
+
+# OSX
+.DS_Store
+
+# Developer scripts
+scripts/

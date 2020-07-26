@@ -1,0 +1,54 @@
+repositories {
+    mavenCentral()
+
+    maven {
+        name 'Paper Repository'
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        name 'EngineHub Repository'
+        url 'https://maven.enginehub.org/repo/'
+    }
+}
+
+dependencies {
+    compileOnly project(':libcomponents-core')
+    compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.1-R0.1-SNAPSHOT'
+    compileOnly group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.2.0-SNAPSHOT'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.10'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+build.dependsOn(sourcesJar)
+build.dependsOn(javadocJar)
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+artifactoryPublish {
+    publishConfigs("archives")
+}
