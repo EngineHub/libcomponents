@@ -1,11 +1,5 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.5'
-    }
+plugins {
+    id "com.jfrog.artifactory" version "4.21.0"
 }
 
 subprojects {
