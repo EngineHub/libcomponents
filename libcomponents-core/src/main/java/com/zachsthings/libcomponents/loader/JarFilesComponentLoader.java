@@ -1,6 +1,7 @@
 package com.zachsthings.libcomponents.loader;
 
 import com.zachsthings.libcomponents.AbstractComponent;
+import com.zachsthings.libcomponents.ComponentInformation;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,8 @@ public abstract class JarFilesComponentLoader extends FileComponentLoader {
 
                 Class<?> clazz = null;
                 try {
-                    clazz = Class.forName(formatPath(next.getName()), true, loader);
+                    String className = formatPath(next.getName());
+                    clazz = Class.forName(className, false, loader);
                 } catch (ClassNotFoundException e) {
                     getLogger().warning("Error loading class " + next.getName() + ": " + e.getMessage());
                     e.printStackTrace();
